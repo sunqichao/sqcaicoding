@@ -14,11 +14,32 @@ description: 纪律化的 AI 编码流程（项目宪法 + 环节规范 + 四阶
 
 | 层 | 位置 | 内容 | 维护方式 |
 |---|---|---|---|
-| **宪法 Rules** | 项目根 `CLAUDE.md` / `.cursorrules` | 架构模式、目录结构、技术栈、编码风格、红线 | 每项目一份，由阶段 0 生成，人工维护 |
+| **宪法 Rules** | 项目根，文件名随工具（见下方工具适配矩阵） | 架构模式、目录结构、技术栈、编码风格、红线 | 每项目一份，由阶段 0 生成，人工维护 |
 | **规范 Spec** | 本 skill 的 `references/` | 需求分析模板、编码规范、CR 评分标准 | 全局共享，改一次处处生效 |
 | **流程 Skill** | 本文件 | 四阶段路由与执行纪律 | 本 skill |
 
-**关键约束：不要把模板拷进项目。** 模板留在 skill 的 `references/`，项目里只留 `CLAUDE.md` 和 `.ai/docs/` 产出物。
+**关键约束：不要把模板拷进项目。** 模板留在 skill 的 `references/`，项目里只留宪法文件和 `.ai/docs/` 产出物。
+
+### 工具适配矩阵（决定宪法写到哪里）
+
+不同 AI 开发工具读的规则文件路径不同。始终以 **`AGENTS.md` 为主文件**（已被 Claude Code v2.1.277+、GitHub Copilot、Trae 等直接读取），其余工具放**一行指针**，避免多份内容不一致。
+
+| 工具 | 读取路径 | 写入策略 |
+|---|---|---|
+| **AGENTS.md（跨工具标准）** | `AGENTS.md` | **主文件，写全量内容** |
+| Claude Code / CodeBuddy | `CLAUDE.md` | 指针：`@AGENTS.md` |
+| Trae | `.trae/rules/project_rules.md`（该目录下所有 `.md` 均 always-applied） | 指针：首行写"完整工程宪法见项目根 AGENTS.md，执行任何任务前先读取" |
+| Cursor | `.cursor/rules/*.mdc` 或 `.cursorrules` | 指针（同上） |
+| Windsurf | `.windsurf/rules/*.md` | 指针（同上） |
+| GitHub Copilot | `.github/copilot-instructions.md`，也读 `AGENTS.md` | 通常无需额外文件 |
+| Gemini CLI | `GEMINI.md` | 指针（同上） |
+
+**决策规则**：
+- 用户只用一个工具 → 直接写该工具的原生文件名，可以不放 `AGENTS.md`
+- 用户混用多个工具 → `AGENTS.md` 写全量，其他工具只放指针
+- 无法确定工具 → 默认只写 `AGENTS.md`，并告知用户如何按需补指针
+
+生成前先检测工程里已存在的规则目录/文件（`.trae/`、`.cursor/`、`.cursorrules`、`CLAUDE.md`、`AGENTS.md`、`.windsurf/`、`.github/copilot-instructions.md`、`GEMINI.md`），据此判断用户实际在用什么工具，**不要凭空假设**。
 
 ## 阶段路由
 
@@ -26,20 +47,22 @@ description: 纪律化的 AI 编码流程（项目宪法 + 环节规范 + 四阶
 
 | 意图信号 | 进入 | 必读 |
 |---|---|---|
-| 首次在某工程使用 / "梳理架构" / "生成 CLAUDE.md" | 阶段 0 | `references/constitution-template.md` |
+| 首次在某工程使用 / "梳理架构" / "生成 CLAUDE.md / AGENTS.md" | 阶段 0 | `references/constitution-template.md` |
 | 贴需求、PRD、"分析需求"、"做技术方案" | 阶段 1 → 2 | `references/requirement-templates.md` |
-| "开始实现"、"写代码"、"按需求做" | 阶段 3 | `references/coding-standards.md` + 项目 `CLAUDE.md` |
+| "开始实现"、"写代码"、"按需求做" | 阶段 3 | `references/coding-standards.md` + 项目宪法文件 |
 | "code review"、"审查"、"检查代码质量" | 阶段 4 | `references/review-rubric.md` |
 
-无法判断时：读项目 `CLAUDE.md` 与 `.ai/docs/` 现有产物，据此推断阶段。
+无法判断时：读项目宪法文件（`AGENTS.md` / `CLAUDE.md` / `.trae/rules/` 等）与 `.ai/docs/` 现有产物，据此推断阶段。
 
 ## 阶段 0：接入工程（每个工程一次）
 
-1. 读 `references/constitution-template.md`
-2. 扫描工程，产出四项：架构模式、目录结构、技术栈及版本、编码风格（附证据：哪些目录体现了该模式）
-3. 标注**偏差**：实际代码哪里已偏离它本该遵循的结构（越层调用、职责跑偏、循环依赖）
-4. 呈现给用户确认，**不直接覆盖已有 `CLAUDE.md`**
-5. 确认后写入项目根 `CLAUDE.md`，`TODO` 项留给用户补充
+1. **检测用户在用哪些工具**：检查 `.trae/`、`.cursor/`、`.cursorrules`、`CLAUDE.md`、`AGENTS.md`、`.windsurf/`、`.github/copilot-instructions.md`、`GEMINI.md` 是否存在，据工具适配矩阵决定写入位置
+2. 读 `references/constitution-template.md`
+3. 扫描工程，产出四项：架构模式、目录结构、技术栈及版本、编码风格（附证据：哪些目录体现了该模式）
+4. 标注**偏差**：实际代码哪里已偏离它本该遵循的结构（越层调用、职责跑偏、循环依赖）
+5. 呈现给用户确认，**不直接覆盖已有宪法文件**；同时告知"我准备写到 X 路径"，让用户可以选择只写某一个工具
+6. 确认后写入。`TODO` 项留给用户补充
+7. 若写入了多个工具的文件，明确告知各文件的**主从关系**（以 `AGENTS.md` 为准），避免以后只改一份造成不一致
 
 不做任何代码改动。
 

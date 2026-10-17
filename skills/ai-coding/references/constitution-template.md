@@ -1,7 +1,27 @@
-# 项目宪法模板（CLAUDE.md / .cursorrules）
+# 项目宪法模板
 
-> 用法：阶段 0 扫描工程后，用本模板生成项目根目录的 `CLAUDE.md`。
+> 用法：阶段 0 扫描工程后，用本模板生成项目宪法文件。
 > 把每处 `TODO` 替换为工程真实情况，删除不适用的行。人工长期维护。
+
+## 写到哪个文件
+
+按 `SKILL.md` 的工具适配矩阵决定：
+
+| 场景 | 写入位置 |
+|---|---|
+| 混用多个工具 | `AGENTS.md` 写全量；`CLAUDE.md` / `.trae/rules/project_rules.md` / `.cursor/rules/*.mdc` 等只放指针 |
+| 只用 Claude Code / CodeBuddy | `CLAUDE.md` |
+| 只用 Trae | `.trae/rules/project_rules.md` |
+| 只用 Cursor | `.cursor/rules/constitution.mdc` 或 `.cursorrules` |
+| 不确定 | 只写 `AGENTS.md`（跨工具标准） |
+
+指针文件的最小内容：
+
+```markdown
+完整工程宪法见项目根 AGENTS.md，执行任何任务前必须先读取该文件并遵守。
+```
+
+> 不要在多处维护全量副本——改一处漏一处是最常见的不一致来源。
 
 ---
 
