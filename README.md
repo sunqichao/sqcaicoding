@@ -79,26 +79,26 @@
 ### 方式 1：任何支持 skills 的 agent（推荐）
 
 ```bash
-npx skills@latest add <你的用户名>/ai-coding
+npx skills@latest add sunqichao/sqcaicoding
 ```
 
 指定 agent：
 
 ```bash
-npx skills@latest add <你的用户名>/ai-coding -a cursor -a claude-code
+npx skills@latest add sunqichao/sqcaicoding -a cursor -a claude-code
 ```
 
 ### 方式 2：CodeBuddy —— 拷目录
 
 ```bash
-git clone https://github.com/<你的用户名>/ai-coding.git /tmp/ai-coding
-cp -R /tmp/ai-coding/skills/ai-coding ~/.codebuddy/skills/
+git clone https://github.com/sunqichao/sqcaicoding.git /tmp/sqcaicoding
+cp -R /tmp/sqcaicoding/skills/ai-coding ~/.codebuddy/skills/
 ```
 
 项目级（随仓库提交给团队）：
 
 ```bash
-mkdir -p .codebuddy/skills && cp -R /tmp/ai-coding/skills/ai-coding .codebuddy/skills/
+mkdir -p .codebuddy/skills && cp -R /tmp/sqcaicoding/skills/ai-coding .codebuddy/skills/
 ```
 
 ### 方式 3：手动 —— 解压 `dist/ai-coding.zip`
